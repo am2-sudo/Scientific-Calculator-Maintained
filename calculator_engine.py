@@ -18,6 +18,13 @@ CONSTANTS = {
     "e": math.e,
 }
 
+# Central registry: keeps supported scalar functions in one maintainable location.
+SCALAR_FUNCTIONS = {
+    "sqrt": math.sqrt,
+    "log": math.log10,
+    "ln": math.log,
+}
+
 
 def evaluate(expression, angle_mode="DEG"):
     """
@@ -107,13 +114,7 @@ def evaluate_node(node, angle_mode):
 
         function_name = node.func.id
 
-        allowed_functions = {
-            "sqrt": math.sqrt,
-            "log": math.log10,
-            "ln": math.log,
-        }
-
-        if function_name in allowed_functions:
+        if function_name in SCALAR_FUNCTIONS:
 
             if len(node.args) != 1:
                 raise ValueError(
@@ -125,7 +126,7 @@ def evaluate_node(node, angle_mode):
                 angle_mode
             )
 
-            return allowed_functions[
+            return SCALAR_FUNCTIONS[
                 function_name
             ](argument)
 
