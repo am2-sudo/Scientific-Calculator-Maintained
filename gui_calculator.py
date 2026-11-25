@@ -89,6 +89,25 @@ def clear_history():
     widgets["display"].focus_set()
 
 
+def export_calculation_history():
+    if not history:
+        messagebox.showinfo("Export History", "There is no calculation history to export.")
+        widgets["display"].focus_set()
+        return
+
+    destination = filedialog.asksaveasfilename(
+        title="Export Calculation History",
+        defaultextension=".csv",
+        filetypes=[("CSV files", "*.csv")]
+    )
+
+    if destination:
+        export_history(history, destination)
+        messagebox.showinfo("Export History", "Calculation history exported successfully.")
+
+    widgets["display"].focus_set()
+
+
 def reuse_history(event=None):
     history_list = widgets["history_list"]
     selection = history_list.curselection()
@@ -135,6 +154,7 @@ callbacks = {
     "calculate": calculate,
     "clear_display": clear_display,
     "clear_history": clear_history,
+    "export_history": export_calculation_history,
     "backspace": backspace,
     "reuse_history": reuse_history,
     "pi": lambda: add_to_display("pi"),

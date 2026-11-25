@@ -310,7 +310,7 @@ def create_layout(window, angle_mode, callbacks):
         pady=(7, 0)
     )
 
-    for column in range(3):
+    for column in range(4):
         control_frame.columnconfigure(
             column,
             weight=1,
@@ -334,6 +334,27 @@ def create_layout(window, angle_mode, callbacks):
     clear_history_button.grid(
         row=0,
         column=0,
+        sticky="nsew",
+        padx=3
+    )
+
+    export_history_button = tk.Button(
+        control_frame,
+        text="EXPORT CSV",
+        font=CONTROL_FONT,
+        height=2,
+        command=callbacks["export_history"],
+        bg=BLUE,
+        fg="white",
+        activebackground=BLUE_ACTIVE,
+        activeforeground="white",
+        bd=0,
+        relief=tk.FLAT
+    )
+
+    export_history_button.grid(
+        row=0,
+        column=3,
         sticky="nsew",
         padx=3
     )
