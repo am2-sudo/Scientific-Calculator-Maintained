@@ -420,3 +420,30 @@ GitHub: [Prashant7525](https://github.com/Prashant7525)
 - **Live Web App:** https://Prashant7525.github.io/Scientific-Calculator/
 - **GitHub Repository:** https://github.com/Prashant7525/Scientific-Calculator
 - **Windows Releases:** https://github.com/Prashant7525/Scientific-Calculator/releases
+
+
+## SW411 Maintenance Update
+
+### Terminal / Headless Usage
+
+The calculator can run without opening the Tkinter graphical interface:
+
+```bash
+python calculator.py --expression "sqrt(25) + 2"
+python calculator.py --expression "sin(pi / 2)" --angle-mode RAD
+python calculator.py --angle-mode DEG
+```
+
+In interactive CLI mode, enter an expression or type `exit` to quit.
+
+### Exporting Calculation History
+
+In the desktop GUI, use **EXPORT CSV** to save the calculation history to a CSV file.
+
+### Running Tests
+
+```bash
+python -m pytest -q
+```
+
+Boolean values are rejected as invalid mathematical input. Supported scalar functions are maintained in a central function registry.
