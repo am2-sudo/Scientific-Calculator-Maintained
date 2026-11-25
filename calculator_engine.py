@@ -41,6 +41,10 @@ def evaluate_node(node, angle_mode):
     # Numbers
     if isinstance(node, ast.Constant):
 
+        # bool is a subclass of int in Python, but it is not a calculator number.
+        if isinstance(node.value, bool):
+            raise ValueError("Boolean values are not valid numbers")
+
         if isinstance(node.value, (int, float)):
             return node.value
 
