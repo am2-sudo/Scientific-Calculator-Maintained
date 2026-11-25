@@ -1,126 +1,69 @@
-import math
+import argparse
+from calculator_engine import evaluate
 
 
-def get_number(prompt):
+def calculate_expression(expression, angle_mode="DEG"):
+    """Evaluate one expression using the shared safe calculation engine."""
+    return evaluate(expression, angle_mode)
+
+
+def format_result(result):
+    if isinstance(result, float):
+        if result.is_integer():
+            return str(int(result))
+        return f"{result:.10g}"
+    return str(result)
+
+
+def interactive_calculator(angle_mode="DEG"):
+    print("Scientific Calculator - CLI mode")
+    print("Enter a mathematical expression, or type 'exit' to quit.")
     while True:
         try:
-            return float(input(prompt))
-        except ValueError:
-            print("Error: Please enter a valid number.")
-
-
-def get_integer(prompt):
-    while True:
+            expression = input(">>> ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print()
+            break
+        if expression.lower() in {"exit", "quit"}:
+            break
+        if not expression:
+            continue
         try:
-            return int(input(prompt))
-        except ValueError:
-            print("Error: Please enter a valid integer.")
+            print(format_result(calculate_expression(expression, angle_mode)))
+        except ZeroDivisionError:
+            print("Error: Cannot divide by zero")
+        except (ValueError, SyntaxError, OverflowError) as error:
+            print(f"Error: {error}")
 
 
-def get_choice():
-    while True:
-        choice = get_integer("Enter your choice (1-14): ")
+def main(argv=None):
+    parser = argparse.ArgumentParser(
+        description="Scientific calculator for headless/terminal environments."
+    )
+    parser.add_argument(
+        "-e", "--expression",
+        help="Evaluate one expression and exit (for example: 'sqrt(25) + 2')."
+    )
+    parser.add_argument(
+        "--angle-mode",
+        choices=("DEG", "RAD"),
+        default="DEG",
+        help="Angle mode used by trigonometric functions (default: DEG)."
+    )
+    args = parser.parse_args(argv)
+    if args.expression is not None:
+        try:
+            print(format_result(calculate_expression(args.expression, args.angle_mode)))
+            return 0
+        except ZeroDivisionError:
+            print("Error: Cannot divide by zero")
+            return 1
+        except (ValueError, SyntaxError, OverflowError) as error:
+            print(f"Error: {error}")
+            return 1
+    interactive_calculator(args.angle_mode)
+    return 0
 
-        if 1 <= choice <= 14:
-            return choice
 
-        print("Error: Please choose a number between 1 and 14.")
-
-
-print("===== Scientific Calculator v1.2 =====")
-
-print("""
-Choose an operation:
-
-1. Addition
-2. Subtraction
-3. Multiplication
-4. Division
-5. Power
-6. Square Root
-7. Sine
-8. Cosine
-9. Tangent
-10. Logarithm (base 10)
-11. Natural Logarithm
-12. Factorial
-13. Show π
-14. Show e
-""")
-
-choice = get_choice()
-
-if choice in [1, 2, 3, 4, 5]:
-    num1 = get_number("Enter first number: ")
-    num2 = get_number("Enter second number: ")
-
-    if choice == 1:
-        result = num1 + num2
-
-    elif choice == 2:
-        result = num1 - num2
-
-    elif choice == 3:
-        result = num1 * num2
-
-    elif choice == 4:
-        if num2 == 0:
-            result = "Error: Cannot divide by zero"
-        else:
-            result = num1 / num2
-
-    else:
-        result = num1 ** num2
-
-elif choice == 6:
-    num = get_number("Enter a number: ")
-
-    if num < 0:
-        result = "Error: Cannot find square root of a negative number"
-    else:
-        result = math.sqrt(num)
-
-elif choice in [7, 8, 9]:
-    angle = get_number("Enter angle in degrees: ")
-    radians = math.radians(angle)
-
-    if choice == 7:
-        result = math.sin(radians)
-
-    elif choice == 8:
-        result = math.cos(radians)
-
-    else:
-        result = math.tan(radians)
-
-elif choice == 10:
-    num = get_number("Enter a number: ")
-
-    if num <= 0:
-        result = "Error: Logarithm is only defined for positive numbers"
-    else:
-        result = math.log10(num)
-
-elif choice == 11:
-    num = get_number("Enter a number: ")
-
-    if num <= 0:
-        result = "Error: Natural logarithm is only defined for positive numbers"
-    else:
-        result = math.log(num)
-
-elif choice == 12:
-    num = get_integer("Enter a non-negative integer: ")
-
-    if num < 0:
-        result = "Error: Factorial is not defined for negative numbers"
-    else:
-        result = math.factorial(num)
-
-elif choice == 13:
-    result = math.pi
-
-else:
-    result = math.e
-
-print("Result:", result)
+if __name__ == "__main__":
+    raise SystemExit(main())
